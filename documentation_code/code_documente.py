@@ -30,7 +30,7 @@ df = pd.read_excel(input_file) # permet de lire le fichier excel
 if "GeneID" not in df.columns: # si la colonne "GeneID" n'est pas dans les colonnes du DataFrame alors renvoie une erreur
     raise ValueError(f"La colonne 'GeneID' n'existe pas dans le fichier. Colonnes disponibles : {list(df.columns)}")
 
-gene_ids = df["GeneID"].dropna().astype(str).unique().tolist() # génère une liste des toutes les lignes différentes de la colonne demandée
+gene_ids = df["GeneID"].dropna().astype(str).unique().tolist() # génère une liste des toutes les lignes différentes de la colonne demandée et la supprime dès que l'information du Gene ID est manquante
 print(f"Nombre de GeneID uniques à interroger : {len(gene_ids)}")
 
 # =====================================================
