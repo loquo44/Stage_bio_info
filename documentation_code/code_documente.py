@@ -25,12 +25,12 @@ json_dir.mkdir(exist_ok=True) # crée le dossier json_dir s'il n'existe pas déj
 # 2. Lecture du fichier (DataFrame)
 #    On utilise la colonne 'GeneID' comme identifiant de gène
 # =====================================================
-df = pd.read_excel(input_file) # permet de lire le fichier excel
+df = pd.read_excel(input_file) # permet de lire le fichier excel et le converti sous forme de dataframe 
 
-if "GeneID" not in df.columns: # si la colonne "GeneID" n'est pas dans les colonnes du DataFrame alors renvoie une erreur
+if "GeneID" not in df.columns: # si la colonne "GeneID" n'est pas dans les colonnes du DataFrame alors renvoie une erreur 
     raise ValueError(f"La colonne 'GeneID' n'existe pas dans le fichier. Colonnes disponibles : {list(df.columns)}")
 
-gene_ids = df["GeneID"].dropna().astype(str).unique().tolist() # génère une liste des toutes les lignes différentes de la colonne demandée et la supprime dès que l'information du Gene ID est manquante
+gene_ids = df["GeneID"].dropna().astype(str).unique().tolist() # génère une liste en format str de toutes les lignes différentes de la colonne demandée et la supprime dès que l'information du Gene ID est manquante
 print(f"Nombre de GeneID uniques à interroger : {len(gene_ids)}")
 
 # =====================================================
@@ -41,23 +41,24 @@ print(f"Nombre de GeneID uniques à interroger : {len(gene_ids)}")
 def query_uniprot_localisation(gene_ids, save_json=True):
     base_url = "https://rest.uniprot.org/uniprotkb/search"
     fields = [
-        "accession",
-        "id",
-        "gene_primary",
-        "cc_subcellular_location",
-        "go_c",
-        "cc_function"
+        "accession", # récupère l'accession de l'entrée UniProt en format str
+        "id", # recupère l'ID de l'entrée UniProt en format str
+        "gene_primary", #recupère le nom du gène principal de l'entrée UniProt en format str
+        "cc_subcellular_location", # récupère la localisation sous-cellulaire de l'entrée UniProt en format str
+        "go_c", # récupère les annotations GO de l'entrée UniProt en format str
+        "cc_function", # récupère la fonction de l'entrée UniProt en format str
+        "organisme" # récupère l'organisme de l'entrée UniProt en format str
     ] # liste des champs que l'on souhaite récupérer depuis UniProt
 
-    results = [] # liste vide qui va contenir les résultats de la requête
+    results = [] # liste vide qui va contenir les résultats de la requête 
 
     for gene in gene_ids:
         # si GeneID = symbole de gène humain (ex: SLC2A1), on utilise gene:
         queries = [
-            f"gene:{gene} AND organism_id:9606 AND reviewed:true",
-            f"gene:{gene} AND organism_id:9606",
-            f"{gene} AND organism_id:9606"
-        ] # liste des requêtes à tester
+            f"gene:{gene} AND organism_id:{fields["organisme"]} AND reviewed:true",
+            f"gene:{gene} AND organism_id:{fields["organisme"]}",
+            f"{gene} AND organism_id:{fields["organisme"]}"
+        ] # liste des requêtes à tester en format str pour chaque gene_id, en filtrant par organisme humain et en priorisant les entrées revues
 
         entry = None
         data_to_save = None
@@ -68,7 +69,7 @@ def query_uniprot_localisation(gene_ids, save_json=True):
                 "fields": ",".join(fields), # appelle field pour la liste des donneés Uniprot
                 "format": "json",
                 "size": 1
-            }
+            }  # crée un dictionnaire params qui contient la requête q, les champs à récupérer, le format de sortie et la taille de la réponse    
 
             try :
                 r = requests.get(base_url, params=params, timeout=15)
@@ -80,8 +81,9 @@ def query_uniprot_localisation(gene_ids, save_json=True):
                 data = r.json() # creer un dictionnaire data qui prend en compte ce que renvoie l'appelle HTTP de r en format "json"
                 hits = data.get("results", []) # hits va contenir ce que va trouver get dans le dictionnaire data à "results" sinon renvoie une liste vide
                 if hits:
-                    entry = hits[0] # entry prend la première valeur de hits
-                    data_to_save = data # data_to_save prend le dictionnaire data
+                    entry = hits[0] # entry prend la première valeur de hits en format dictionnaire
+                    data_to_save = data # data_to_save prend le dictionnaire data en format dictionnaire
+                    break # si entry est trouvé alors sort de la boucle
                     
             else:
                 print(f"Erreur UniProt {r.status_code} pour {gene}") # sinon affiche une erreur pour le gene demandé en inquant lequel
@@ -95,18 +97,18 @@ def query_uniprot_localisation(gene_ids, save_json=True):
         # ------------- Extraction des informations -----------------
         uniprot_id = ""
         accession = ""
-        confirmed_loc_list = []      # localisation « consensus » UniProt
-        er_subtype_list = []         # sous-types ER (optionnel, filtré)
-        go_locterms = []             # GO cellular component (putative)
-        function_texts = []          # fonction
+        confirmed_loc_list = []      # localisation « consensus » UniProt type str
+        er_subtype_list = []         # sous-types ER (optionnel, filtré) type str
+        go_locterms = []             # GO cellular component (putative) type str
+        function_texts = []          # fonction type str
 
         if entry is not None:   # on vérifie que results est bien dans le dictionnaire data
-            accession = entry.get("primaryAccession", "") # cherche la requete dans entry et la met dans accession sinon met une entré vide
-            uniprot_id = entry.get("uniProtkbId", "")   # cherche la requete dans entry et la met dans uniprot_id sinon met une entré vide
+            accession = entry.get("primaryAccession", "") # cherche la requete dans entry et la met dans accession sinon met une entré vide en format str
+            uniprot_id = entry.get("uniProtkbId", "")   # cherche la requete dans entry et la met dans uniprot_id sinon met une entré vide en format str
 
             # Commentaires UniProt (fonction, localisation)
             for comment in entry.get("comments", []): # prend chaque comment où entry à la valeur demandé 
-                ctype = comment.get("commentType")
+                ctype = comment.get("commentType") # donne la valeur de commentType sinon met une entrée vide dans un format str
 
                 if ctype == "SUBCELLULAR LOCATION":
                     for loc in comment.get("subcellularLocations", []): # prend les localisations pour chaque comment qui a un subcellularLocations sinon prend une liste vide
@@ -121,7 +123,7 @@ def query_uniprot_localisation(gene_ids, save_json=True):
                     for txt in comment.get("texts", []): # prend les textes pour chaque comment qui a un texts sinon prend une liste vide
                         val = txt.get("value", "") # donne la valeur de txt sinon met une entrée vide
                         if val: # si val n'est pas vide alors ajoute val à la liste function_texts
-                            function_texts.append(val)
+                            function_texts.append(val) # format str
 
             # GO cellular component pour localisation putative
             for xref in entry.get("uniProtKBCrossReferences", []): # prend les xref pour chaque fois que la demande a été confirmé dans entry 
@@ -130,7 +132,7 @@ def query_uniprot_localisation(gene_ids, save_json=True):
                     # inclu dans prop_type, chaque 
                     prop_type = {p.get("value", "") for p in xref.get("properties", []) if p.get("key") == "aspect"} # donne la valeur de chaque propriété qui a pour clé "aspect" sinon met une entrée vide
                     if "C" in prop_type: # si "C" est dans prop_type alors ajoute à la liste go_locterms le GO ID et le nom du terme
-                        go_id = xref.get("id", "")
+                        go_id = xref.get("id", "") # go_id renvoie du format str 
                         term_name = ""
                         for p in xref.get("properties", []): # prend chaque propriété de xref
                             if p.get("key") == "term": # si la clé de p est "term" alors met la valeur de p dans term_name sinon met une entrée vide
@@ -154,7 +156,7 @@ def query_uniprot_localisation(gene_ids, save_json=True):
             "Putative localization GO annotation": putative_loc,
             "Function": function_str,
             "UniProt accession": accession
-        }) # ajoute à la liste results un dictionnaire avec les valeurs demandées pour chaque gene
+        }) # ajoute à la liste results un dictionnaire de str avec les valeurs demandées pour chaque gene
 
         time.sleep(0.3)
 
