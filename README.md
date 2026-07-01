@@ -1,11 +1,37 @@
-# Stage_bio_info
+# Stage de Bio-Informaique
 
-Stage dans l'Institut de Biologie Intégrative de la Cellule à Gif-sur-Yvette. Cela est une démarche personelle puisqu'il se déroule hors période scolaire. C'est donc en toute autonomie, que j'ai fait une demande de stage, dans une équipe de bio-informaticien au sein de l'I2BC, afin d'approfondir mes connaissances et mon pannelle de compétence.
+# __1. Sommaire__
 
-## Point aborder pendant ce stage :
+|                             |
+|:---------------------------:|
+|[__Contexte__](#Contexte)    |
+|[__Détails__](#détails)      |
+|[__Conclusion__](#conclusion)|
 
-* Python
-    * Documentation de code
-        * permet de compléter et confirmer mes bases
-        * permet d'aider une bio-informaticienne à passer moins de temps pour sa correction
-    * traitement de bases de données
+
+## __2. Contexte__
+### 2.1 Contexte Institutionnel : Institut de Biologie Intégrative de la Celule (I2BC)
+
+Mon stage s'est déroulé au sein de l'Institut de Biologie Intégrative de la Celule (I2BC), une Unité Mixte de Recherche (UMR) d'envergure internationale placée sous la tutelle du CNRS, du CEA et de l'Université Paris-Saclay. Situé sur le campus de Gif-Sur-Yvette, cet institut regroupe de nombreuses équipes de recherche qui explorent les mécanismes fondamentaux du vivant,de la structure des macromolécules jusqu'au fonctionnement global des cellules et des organismes.
+
+La recherche moderne génère une quantité massive de données surtout avec le séquençage à haut débit et l'imagerie. C'est pour quoi l'I2BC intègre pleinement la bio-informatique au coeur de ses activités, combinant l'informatique, les statistiques et la biologie pour analyser et interpréter ces données complexes.
+
+J'ai eu l'opportunité d'intégrer l'équipe de la Bio-Informaticienne Emilie Drouineau, qui concentre ses recherches sur ... .
+
+### 2.2 La problématique scientifique et les besoins de l'équipe
+
+
+
+### 2.3 Objectif et but du stage : A quoi ma présence peut-elle servir ?
+
+## __3. Détails__
+* __Python__
+    * amélioration et documentation de code
+        * _permet de consolider mes bases_
+        * _permet d'aider à une meilleure compréhension du code pour ses utilisateurs futur_
+    * uniformisation de fichier type base de données
+        * _amélioration de la comparaison de fichier_
+        * _priorisation de certains critères de selection_
+    * automatisation de la determination de complexe protéiques avec extraction de base de données
+
+## __4. Conclusion__
