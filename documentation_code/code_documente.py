@@ -41,8 +41,8 @@ print(f"Nombre de GeneID uniques à interroger : {len(gene_ids)}")
 def query_uniprot_localisation(gene_ids, save_json=True):
     base_url = "https://rest.uniprot.org/uniprotkb/search"
     fields = [
-        "accession", # récupère l'accession de l'entrée UniProt en format str
-        "id", # recupère l'ID de l'entrée UniProt en format str
+        "accession", # c'est l'identifiant unique de l'entrée UniProt en format str
+        "id", # c'est l'identifiant unique en format str
         "gene_primary", #recupère le nom du gène principal de l'entrée UniProt en format str
         "cc_subcellular_location", # récupère la localisation sous-cellulaire de l'entrée UniProt en format str
         "go_c", # récupère les annotations GO de l'entrée UniProt en format str
