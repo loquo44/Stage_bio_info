@@ -21,6 +21,7 @@ json_dir = Path(r"C:\\Users\\teo.merenda\\Documents\\uniprot_json_localisation")
 
 json_dir.mkdir(exist_ok=True) # crée le dossier json_dir s'il n'existe pas déjà
 
+organisme = 9606 # à changer si l'on souhaite interroger un autre organisme (organisme les plus utilisés : mammal [homo-Sapiens = 9606, mus musculus = 10090], fish : [zebrafish = 7955], amphibian[xenopus laevis = 9685], yeast[saccharomyces = 4932], bacterium[escherichia coli = 562])
 # =====================================================
 # 2. Lecture du fichier (DataFrame)
 #    On utilise la colonne 'GeneID' comme identifiant de gène
@@ -55,9 +56,9 @@ def query_uniprot_localisation(gene_ids, save_json=True):
     for gene in gene_ids:
         # si GeneID = symbole de gène humain (ex: SLC2A1), on utilise gene:
         queries = [
-            f"gene:{gene} AND organism_id:{fields["organisme"]} AND reviewed:true",
-            f"gene:{gene} AND organism_id:{fields["organisme"]}",
-            f"{gene} AND organism_id:{fields["organisme"]}"
+            f"gene:{gene} AND organism_id:{[organisme]} AND reviewed:true",
+            f"gene:{gene} AND organism_id:{[organisme]}",
+            f"{gene} AND organism_id:{[organisme]}"
         ] # liste des requêtes à tester en format str pour chaque gene_id, en filtrant par organisme humain et en priorisant les entrées revues
 
         entry = None
