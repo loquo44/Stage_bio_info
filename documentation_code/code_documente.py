@@ -4,7 +4,6 @@ Created on Thu Jan 29 07:51:50 2026
 
 @author: meren
 """
-
 import pandas as pd
 import requests
 import time
@@ -15,23 +14,28 @@ from pathlib import Path
 # 1. Fichiers
 # creer 3 chemin distinct afin de récuperer des fichiers utiles au code
 # =====================================================
-input_file = Path(r"/workspaces/Stage_bio_info/documentation_code/fichier_test_GENE_ID.xlsx")
-output_file = Path(r"C:\Users\meren\Desktop\stage info\uniprot_localisation_from_GeneID.xlsx")
-json_dir = Path(r"C:\Users\meren\Desktop\stage info\uniprot_json_localisation")
+input_file = Path(r"/workspaces/Stage_bio_info/documentation_code/fichier_test_raccourci_Gene_ID.xlsx")
+output_file = Path(r"C:\Users\meren\Desktop\stage_info\uniprot_localisation_from_GeneID.xlsx")
+json_dir = Path(r"C:\Users\meren\Desktop\stage_info\uniprot_json_localisation")
 
 json_dir.mkdir(exist_ok=True) # crée le dossier json_dir s'il n'existe pas déjà
 
-organisme = 9606 # à changer si l'on souhaite interroger un autre organisme (organisme les plus utilisés : mammal [homo-Sapiens = 9606, mus musculus = 10090], fish : [zebrafish = 7955], amphibian[xenopus laevis = 9685], yeast[saccharomyces = 4932], bacterium[escherichia coli = 562])
+if json_dir.exists():
+    print(f" Dossier JSON existe : {json_dir}")
+    
+organisme = 10090 # à changer si l'on souhaite interroger un autre organisme (organisme les plus utilisés : mammal [homo-Sapiens = 9606, mus musculus = 10090], fish : [zebrafish = 7955], amphibian[xenopus laevis = 8355], yeast[saccharomyces = 4930], bacterium[escherichia coli = 562])
 
-# recupération du nom de l'organisme via UniProt 
+# Récupération du nom de l'organisme via UniProt 
 print (f"recherche du nom de l'organisme : {organisme}")
 try: 
     org_res = requests.get(f"https://rest.uniprot.org/taxonomy/{organisme}")
-    nom_organisme = org_res.get("scientificName", f"ID {organisme}")
+    data_org = org_res.json()
+    nom_organisme = data_org.get("scientificName", f"ID {organisme}")
 except Exception:
     nom_organisme = f"ID {organisme}" #solution de secour si le réseau est problématique
 print(f"Nom de l'organisme : {nom_organisme}"
       )
+
 # =====================================================
 # 2. Lecture du fichier (DataFrame)
 #    On utilise la colonne 'Gene ID' comme identifiant de gène
@@ -58,7 +62,6 @@ def query_uniprot_localisation(gene_ids, save_json=True):
         "cc_subcellular_location", # récupère la localisation sous-cellulaire de l'entrée UniProt en format str
         "go_c", # récupère les annotations GO de l'entrée UniProt en format str
         "cc_function", # récupère la fonction de l'entrée UniProt en format str
-        "organisme" # récupère l'organisme de l'entrée UniProt en format str
     ] # liste des champs que l'on souhaite récupérer depuis UniProt
 
     results = [] # liste vide qui va contenir les résultats de la requête 
@@ -199,6 +202,10 @@ df_output = df_loc[cols_finales] # renvoie un DataFrame avec les colonnes demand
 # =====================================================
 df_output.to_excel(output_file, index=False, engine="openpyxl") # exporte le DataFrame df_output dans un fichier excel avec le nom de fichier output_file, sans les index et en utilisant le moteur openpyxl
 
+if json_dir.exists():
+    print(f" Dossier JSON existe : {json_dir}")
+    
+    
 print(f"✅ Fichier exporté : {output_file}")
 print(f"📁 JSON UniProt sauvegardés dans : {json_dir}")
 print(f"voici les résultats demandé pour l'organisme {nom_organisme}: ID {organisme}")
