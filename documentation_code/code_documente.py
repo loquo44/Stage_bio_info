@@ -2,7 +2,7 @@
 """
 Created on Thu Jan 29 07:51:50 2026
 
-@author: teo.merenda
+@author: meren
 """
 
 import pandas as pd
@@ -15,24 +15,34 @@ from pathlib import Path
 # 1. Fichiers
 # creer 3 chemin distinct afin de récuperer des fichiers utiles au code
 # =====================================================
-input_file = Path(r"C:\\Users\\teo.merenda\\Documents\\DTT red+ ox- no mix .xlsx")
-output_file = Path(r"C:\\Users\\teo.merenda\\Documents\\uniprot_localisation_from_GeneID.xlsx")
-json_dir = Path(r"C:\\Users\\teo.merenda\\Documents\\uniprot_json_localisation")
+input_file = Path(r"/workspaces/Stage_bio_info/documentation_code/fichier_test_GENE_ID.xlsx")
+output_file = Path(r"C:\Users\meren\Desktop\stage info\uniprot_localisation_from_GeneID.xlsx")
+json_dir = Path(r"C:\Users\meren\Desktop\stage info\uniprot_json_localisation")
 
 json_dir.mkdir(exist_ok=True) # crée le dossier json_dir s'il n'existe pas déjà
 
 organisme = 9606 # à changer si l'on souhaite interroger un autre organisme (organisme les plus utilisés : mammal [homo-Sapiens = 9606, mus musculus = 10090], fish : [zebrafish = 7955], amphibian[xenopus laevis = 9685], yeast[saccharomyces = 4932], bacterium[escherichia coli = 562])
+
+# recupération du nom de l'organisme via UniProt 
+print (f"recherche du nom de l'organisme : {organisme}")
+try: 
+    org_res = requests.get(f"https://rest.uniprot.org/taxonomy/{organisme}")
+    nom_organisme = org_res.get("scientificName", f"ID {organisme}")
+except Exception:
+    nom_organisme = f"ID {organisme}" #solution de secour si le réseau est problématique
+print(f"Nom de l'organisme : {nom_organisme}"
+      )
 # =====================================================
 # 2. Lecture du fichier (DataFrame)
-#    On utilise la colonne 'GeneID' comme identifiant de gène
+#    On utilise la colonne 'Gene ID' comme identifiant de gène
 # =====================================================
 df = pd.read_excel(input_file) # permet de lire le fichier excel et le converti sous forme de dataframe 
 
-if "GeneID" not in df.columns: # si la colonne "GeneID" n'est pas dans les colonnes du DataFrame alors renvoie une erreur 
-    raise ValueError(f"La colonne 'GeneID' n'existe pas dans le fichier. Colonnes disponibles : {list(df.columns)}")
+if "Gene ID" not in df.columns: # si la colonne "Gene ID" n'est pas dans les colonnes du DataFrame alors renvoie une erreur 
+    raise ValueError(f"La colonne 'Gene ID' n'existe pas dans le fichier. Colonnes disponibles : {list(df.columns)}")
 
-gene_ids = df["GeneID"].dropna().astype(str).unique().tolist() # génère une liste en format str de toutes les lignes différentes de la colonne demandée et la supprime dès que l'information du Gene ID est manquante
-print(f"Nombre de GeneID uniques à interroger : {len(gene_ids)}")
+gene_ids = df["Gene ID"].dropna().astype(str).unique().tolist() # génère une liste en format str de toutes les lignes différentes de la colonne demandée et la supprime dès que l'information du Gene ID est manquante
+print(f"Nombre de Gene ID uniques à interroger : {len(gene_ids)}")
 
 # =====================================================
 # 3. Requête UniProt pour récupérer la localisation
@@ -56,9 +66,9 @@ def query_uniprot_localisation(gene_ids, save_json=True):
     for gene in gene_ids:
         # si GeneID = symbole de gène humain (ex: SLC2A1), on utilise gene:
         queries = [
-            f"gene:{gene} AND organism_id:{[organisme]} AND reviewed:true",
-            f"gene:{gene} AND organism_id:{[organisme]}",
-            f"{gene} AND organism_id:{[organisme]}"
+            f"gene:{gene} AND organism_id:{organisme} AND reviewed:true",
+            f"gene:{gene} AND organism_id:{organisme}",
+            f"{gene} AND organism_id:{organisme}"
         ] # liste des requêtes à tester en format str pour chaque gene_id, en filtrant par organisme humain et en priorisant les entrées revues
 
         entry = None
@@ -150,7 +160,7 @@ def query_uniprot_localisation(gene_ids, save_json=True):
         function_str = " ".join(function_texts) if function_texts else "" # si function_texts n'est pas vide alors join les valeurs de la liste avec un " " sinon met une entrée vide
 
         results.append({
-            "GeneID": gene,
+            "Gene ID": gene,
             "Uniprot ID": uniprot_id,
             "Confirmed localization (UniProt consensus)": confirmed_loc,
             "ER location subtype": er_subtype,
@@ -174,7 +184,7 @@ df_loc = query_uniprot_localisation(gene_ids, save_json=True) # appelle la fonct
 # Ici, on ne garde que les colonnes demandées dans la question
 
 cols_finales = [
-    "GeneID",
+    "Gene ID",
     "Uniprot ID",
     "Confirmed localization (UniProt consensus)",
     "ER location subtype",
@@ -191,3 +201,4 @@ df_output.to_excel(output_file, index=False, engine="openpyxl") # exporte le Dat
 
 print(f"✅ Fichier exporté : {output_file}")
 print(f"📁 JSON UniProt sauvegardés dans : {json_dir}")
+print(f"voici les résultats demandé pour l'organisme {nom_organisme}: ID {organisme}")
