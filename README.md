@@ -16,7 +16,7 @@ Mon stage s'est déroulé au sein de l'Institut de Biologie Intégrative de la C
 
 La recherche moderne génère une quantité massive de données surtout avec le séquençage à haut débit et l'imagerie. C'est pour quoi l'I2BC intègre pleinement la bio-informatique au coeur de ses activités, combinant l'informatique, les statistiques et la biologie pour analyser et interpréter ces données complexes.
 
-J'ai eu l'opportunité d'intégrer l'équipe de la Bio-Informaticienne Emilie Drouineau, qui concentre ses recherches sur ... .
+J'ai eu l'opportunité d'intégrer l'équipe de la Bio-Informaticienne Emilie Drouineau, qui concentre ses recherches sur le phasing des nucléosomes et sur l'impact de la perte de fonction des protéines du complexe BAF sur la régulation de la chromatine.
 
 ### 2.2 La problématique scientifique et les besoins de l'équipe
 
