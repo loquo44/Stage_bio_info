@@ -1,4 +1,4 @@
-# Tableau comparatif des dfférentes bases de données
+# Tableau comparatif des différentes bases de données
 
 
 |Critère                |Complex Portal                    |Bio Cyc                           |STRING                            |
