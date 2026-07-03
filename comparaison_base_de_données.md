@@ -1,7 +1,6 @@
-#Tableau comparatif des dfférentes bases de données
+# Tableau comparatif des dfférentes bases de données
 
 
-|:---------------------:|:--------------------------------:|:--------------------------------:|:--------------------------------:|
 |Critère                |Complex Portal                    |Bio Cyc                           |STRING                            |
 |:----------------------|:---------------------------------|:---------------------------------|:---------------------------------|
 |entité de base         |complexe macromoléculaire         |objet biochimique(gènes,métabolite,complexe,reaction)|noeud protéique + paire d'intéraction|
