@@ -14,7 +14,7 @@ from pathlib import Path
 # 1. Fichiers
 # creer 3 chemin distinct afin de récuperer des fichiers utiles au code
 # =====================================================
-input_file = Path(r"/workspaces/Stage_bio_info/documentation_code/fichier_test_raccourci_Gene_ID.xlsx")
+input_file = Path(r"/workspaces/Stage_bio_info/base_de_donnees_UniProt/fichier_test_raccourci_Gene_ID.xlsx")
 output_file = Path(r"C:\Users\meren\Desktop\stage_info\uniprot_localisation_from_GeneID.xlsx")
 json_dir = Path(r"C:\Users\meren\Desktop\stage_info\uniprot_json_localisation")
 
