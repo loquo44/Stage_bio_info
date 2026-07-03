@@ -61,12 +61,19 @@ print(f"Organisme retenu : {org_name}\n")
 
 # URL de l'API STRING pour récupérer les annotations fonctionnelles
 url_string = "https://string-db.org/api/json/functional_terms"
+fields = [
+        "category", # c'est la categorie à laquelle appartient la protéine
+        "term", # c'est l'identifiant unique en format str
+        "description", # recupère la derscription de la prot STRING en format str
+        "StringIds", # récupère lid STRING en format str
+    ] # liste des champs que l'on souhaite récupérer depuis STRING
 
 # Paramètres à envoyer à l'API STRING
 api_params = {
     "identifiers": prot_name,
     "species": tax_id,
-    "caller_identity": "stage_bioinfo_script"
+    "fields": ",".join(fields),
+    "format": "json"
 }
 
 # Liste pour stocker les lignes de résultats formatées
