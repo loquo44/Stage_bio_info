@@ -70,10 +70,11 @@ fields = [
 
 # Parametres a envoyer a l'API STRING
 api_params = {
-    "identifiers": prot_name,
+    "term_text": prot_name,
     "species": tax_id,
     "fields": ",".join(fields),
-    "format": "json"
+    "format": "json",
+    "size": "1"
 }
 
 # Liste pour stocker les lignes de resultats formatees
@@ -83,7 +84,7 @@ raw_json = None
 print(f" Connexion à STRING-DB pour : {prot_name}")
 try:
     # Envoi de la requete GET à STRING
-    response = requests.get(url_string, params=api_params, timeout=15)
+    response = requests.get(f"https://string-db.org/api/json/functional_terms", params=api_params, timeout=10)
     if response.status_code == 200:
         # Recupere le contenu JSON si la requete a reussi
         raw_json = response.json()
@@ -109,8 +110,6 @@ if raw_json:
         desc = item.get("description", "")
         
         # Initialise les variables de texte pour cette annotation
-        loc_conf = ""
-        loc_er = ""
         loc_go = ""
         func_txt = ""
         
@@ -118,26 +117,11 @@ if raw_json:
         if category == "Component" or "GO:" in term_id:
             loc_go = f"{term_id} ({desc})"
             
-            # Recherche des mots-cles pour valider une localisation generale
-            if any(key in desc.lower() for key in ["membrane", "nucleus", "cytoplasm", "mitochondrion"]):
-                loc_conf = desc
-            
-            # Repere si l'annotation concerne le Réticulum Endoplasmique (ER)
-            if "endoplasmic reticulum" in desc.lower():
-                loc_er = desc
-                
-        # Filtre les annotations liees aux processus biologiques (Fonctions)
-        if category == "Process":
-            func_txt = desc
-
         # Cree un bloc de texte propre pour cette annotation specifique
         block = (
             f"Gene ID: {prot_name}\n"
             f"Complex/Term ID: {term_id}\n"
-            f"Confirmed localization: {loc_conf}\n"
-            f"ER location subtype: {loc_er}\n"
             f"Putative GO annotation: {loc_go}\n"
-            f"Function: {func_txt}\n"
         )
         # Ajoute ce bloc a notre liste de résultats
         results.append(block)

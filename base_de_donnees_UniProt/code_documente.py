@@ -79,7 +79,7 @@ def query_uniprot_localisation(gene_ids, save_json=True):
 
         for q in queries: # prend le gene donné par queries 
             params = {
-                "query": q,
+                "query": q, # nom du gene
                 "fields": ",".join(fields), # appelle field pour la liste des donneés Uniprot
                 "format": "json",
                 "size": 1
@@ -92,7 +92,8 @@ def query_uniprot_localisation(gene_ids, save_json=True):
                 break # si il y a une erreur réseau alors affiche l'erreur et sort de la boucle
 
             if r.status_code == 200:
-                data = r.json() # creer un dictionnaire data qui prend en compte ce que renvoie l'appelle HTTP de r en format "json"
+                data = r.json()
+                print(data) # creer un dictionnaire data qui prend en compte ce que renvoie l'appelle HTTP de r en format "json"
                 hits = data.get("results", []) # hits va contenir ce que va trouver get dans le dictionnaire data à "results" sinon renvoie une liste vide
                 if hits:
                     entry = hits[0] # entry prend la première valeur de hits en format dictionnaire
