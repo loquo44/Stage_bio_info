@@ -66,6 +66,8 @@ fields = [
         "term", # c'est l'identifiant unique en format str
         "description", # recupere la derscription de la prot STRING en format str
         "stringIds", # recupere l'id STRING en format str
+        "proteinCount", # recupere le nombre de proteines dans la categorie
+        "preferredNames", # recupere le nom preferentiel de la proteine STRING
     ] # liste des champs que l'on souhaite recuperer depuis STRING
 
 # Parametres a envoyer a l'API STRING
@@ -84,7 +86,7 @@ raw_json = None
 print(f" Connexion à STRING-DB pour : {prot_name}")
 try:
     # Envoi de la requete GET à STRING
-    response = requests.get(f"https://string-db.org/api/json/functional_terms", params=api_params, timeout=10)
+    response = requests.get(url_string, params=api_params, timeout=10)
     if response.status_code == 200:
         # Recupere le contenu JSON si la requete a reussi
         raw_json = response.json()
@@ -103,28 +105,53 @@ if raw_json:
 
 # Traitement des donnees extraites du JSON
 if raw_json:
+    filtre_input = input("Entrez le filtre pour les categories, par defaut(None) : ").strip() # appliquez le filtre
+    if filtre_input == "":
+        filtre = None
+    else:
+        filtre = filtre_input
+        
     # Parcourt chaque annotation renvoyee par STRING
     for item in raw_json:
         category = item.get("category", "")
         term_id = item.get("term", "")
         desc = item.get("description", "")
+        string_ids = item.get("stringIds", [])
+        protein_count = item.get("proteinCount", 0)
+        preferredNames = item.get("preferredNames", [])
         
-        # Initialise les variables de texte pour cette annotation
+        # Initialise la variable de texte pour cette annotation
+        term = ""
         loc_go = ""
-        func_txt = ""
+        mot = ""
         
-        # Filtre les annotations liees aux composants cellulaires (Localisation)
-        if category == "Component" or "GO:" in term_id:
-            loc_go = f"{term_id} ({desc})"
+        loc_go = f"{desc}" # recupere la description de la proteine STRING
+        
+        if filtre == None : # si aucun filtre n'est fourni
+            term = term_id # on prend toutes les categories
             
-        # Cree un bloc de texte propre pour cette annotation specifique
-        block = (
-            f"Gene ID: {prot_name}\n"
-            f"Complex/Term ID: {term_id}\n"
-            f"Putative GO annotation: {loc_go}\n"
-        )
+        # Filtre les categories selon l'input de l'utilisateur
+        else:
+            for id in range(len(term_id)): #parcours les diffentes categories 
+                mot+=term_id[id]
+                
+            if filtre == mot: #cherche si le nom de la categorie correspond au filtre
+                term = mot # permet d'inserer le filtre dans la categorie
+                print(term)
+                
+                # Cree un bloc de texte propre pour cette annotation specifique
+                block = (
+                f"Category: {category}\n"
+                f"Gene ID: {prot_name}\n"
+                f"Complex/Term ID: {term}\n"
+                f"Putative GO annotation: {loc_go}\n"
+                f"Protein Count: {protein_count}\n"
+                f"STRING IDs: {'\n '.join(string_ids)}\n"
+                f"Preferred Names: {'\n '.join(preferredNames)}\n"                
+                )
+            
         # Ajoute ce bloc a notre liste de résultats
-        results.append(block)
+    results.append(block)
 
 # Si l'API n'a retourne aucun résultat pour cette proteine
 if not results:
@@ -141,7 +168,7 @@ with open(out_txt, "w", encoding="utf-8") as f_txt:
     
     # Ecrit chaque bloc d'annotation l'un apres l'autre
     for result_block in results:
-        f_txt.write(result_block + "\n")
+        f_txt.write("\n" + result_block + "\n")
 
 # Messages de confirmation de fin de script
 print("\n--- TRAITEMENT TERMINÉ ---")

@@ -1,35 +1,20 @@
 RÉSULTATS DE LA RECHERCHE STRING-DB
 Protéine cible : INS
 Organisme : Homo sapiens (TaxID: 9606)
-Gene ID: INS
-Complex/Term ID: GO:0007320
-Putative GO annotation: GO:0007320 (Insemination)
 
+Category: GO Function
 Gene ID: INS
 Complex/Term ID: GO:0043559
-Putative GO annotation: GO:0043559 (Insulin binding)
-
-Gene ID: INS
-Complex/Term ID: GO:0030073
-Putative GO annotation: GO:0030073 (Insulin secretion)
-
-Gene ID: INS
-Complex/Term ID: GO:0030070
-Putative GO annotation: GO:0030070 (Insulin processing)
-
-Gene ID: INS
-Complex/Term ID: map04911
-Putative GO annotation: 
-
-Gene ID: INS
-Complex/Term ID: MAP-264876
-Putative GO annotation: 
-
-Gene ID: INS
-Complex/Term ID: map04931
-Putative GO annotation: 
-
-Gene ID: INS
-Complex/Term ID: DOID:3892
-Putative GO annotation: 
+Putative GO annotation: Insulin binding
+Protein Count: 5
+STRING IDs: 9606.ENSP00000265986
+ 9606.ENSP00000303830
+ 9606.ENSP00000338885
+ 9606.ENSP00000428056
+ 9606.ENSP00000497069
+Preferred Names: IDE
+ INSR
+ C2CD2L
+ PIK3R1
+ IGF1R
 
