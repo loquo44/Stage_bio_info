@@ -65,7 +65,7 @@ fields = [
         "category", # c'est la categorie à laquelle appartient la proteine
         "term", # c'est l'identifiant unique en format str
         "description", # recupere la derscription de la prot STRING en format str
-        "StringIds", # recupere l'id STRING en format str
+        "stringIds", # recupere l'id STRING en format str
     ] # liste des champs que l'on souhaite recuperer depuis STRING
 
 # Parametres a envoyer a l'API STRING

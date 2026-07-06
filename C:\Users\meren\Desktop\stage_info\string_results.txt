@@ -1,0 +1,4 @@
+RÉSULTATS DE LA RECHERCHE STRING-DB
+Protéine cible : INS
+Organisme : Homo sapiens (TaxID: 9606)
+Aucune annotation trouvée dans STRING pour INS (TaxID: 9606).
