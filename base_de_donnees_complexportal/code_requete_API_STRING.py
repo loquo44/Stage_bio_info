@@ -134,14 +134,15 @@ if raw_json:
             
             # Cree un bloc de texte propre pour cette annotation specifique
             block = (
-            f"Category: {category}\n"
-            f"Gene ID: {prot_name}\n"
-            f"Complex/Term ID: {term}\n"
-            f"Putative GO annotation: {loc_go}\n"
-            f"Protein Count: {protein_count}\n"
-            f"STRING IDs: {'\n '.join(string_ids)}\n"
-            f"Preferred Names: {'\n '.join(preferredNames)}\n"                
-            )
+                f"### Category: {category}\n"
+                f"### Gene ID: {prot_name}\n"
+                f"### Complex/Term ID: {term}\n"
+                f"### Putative GO annotation: {loc_go}\n"
+                f"### Protein Count: {protein_count}\n"
+                "\n"+"| STRING IDs           | Preferred Names \n"
+                )
+            for i in range(len(string_ids)):
+                block += (f"| {string_ids[i]} | {preferredNames[i]} \n")
             all_block.append(block) # Ajoute ce bloc a notre liste de resultats
             
         # Filtre les categories selon l'input de l'utilisateur
@@ -151,20 +152,20 @@ if raw_json:
                 
             if filtre == mot: #cherche si le nom de la categorie correspond au filtre
                 term = mot # permet d'inserer le filtre dans la categorie
-                print(term)
                 
                 
                 # Cree un bloc de texte propre pour cette annotation specifique
                 block = (
-                f"Category: {category}\n"
-                f"Gene ID: {prot_name}\n"
-                f"Complex/Term ID: {term}\n"
-                f"Putative GO annotation: {loc_go}\n"
-                f"Protein Count: {protein_count}\n"
-                f"STRING IDs: {'\n '.join(string_ids)}\n"
-                f"Preferred Names: {'\n '.join(preferredNames)}\n"                
+                f"### Category: {category}\n"
+                f"### Gene ID: {prot_name}\n"
+                f"### Complex/Term ID: {term}\n"
+                f"### Putative GO annotation: {loc_go}\n"
+                f"### Protein Count: {protein_count}\n"
+                "\n"+"| STRING IDs           | Preferred Names \n"
                 )
-                one_block.append(block)
+                for i in range(len(string_ids)):
+                    block += (f"| {string_ids[i]} | {preferredNames[i]} \n")
+                one_block.append(block) 
         # Ajoute ce bloc a notre liste de résultats
     results = one_block if one_block else all_block # Utilise les resultats filtres si disponibles, sinon tous les resultats
 
@@ -177,9 +178,9 @@ if not results:
 # Ouvre le fichier texte en mode ecriture 
 with open(out_txt, "w", encoding="utf-8") as f_txt:
     # Ecrit en-tête general au début du fichier
-    f_txt.write(f"RÉSULTATS DE LA RECHERCHE STRING-DB\n")
-    f_txt.write(f"Protéine cible : {prot_name}\n")
-    f_txt.write(f"Organisme : {org_name} (TaxID: {tax_id})\n")
+    f_txt.write(f"# RÉSULTATS DE LA RECHERCHE STRING-DB\n")
+    f_txt.write("\n" + f"## Protéine cible : {prot_name}\n")
+    f_txt.write(f"## Organisme : {org_name} (TaxID: {tax_id})\n")
     
     # Ecrit chaque bloc d'annotation l'un apres l'autre
     for result_block in results:
