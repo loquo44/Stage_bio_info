@@ -13,7 +13,7 @@ import time
 # 1. CONFIGURATION DES CHEMINS DE SORTIE
 
 # Dossier et fichiers ou seront sauvegardes les résultats
-out_txt = Path(r"C:\Users\meren\Desktop\stage_info\string_results.txt")
+out_txt = Path(r"C:\Users\meren\Desktop\stage_info\string_results.md")
 json_dir = Path(r"C:\Users\meren\Desktop\stage_info\string_json_output")
 
 # Cree le dossier pour les JSON s'il n'existe pas
@@ -103,6 +103,8 @@ if raw_json:
         # Ecrit le JSON de manière lisible (indentation de 2 espaces)
         json.dump(raw_json, f_json, indent=2, ensure_ascii=False)
 
+one_block = []
+all_block=[]
 # Traitement des donnees extraites du JSON
 if raw_json:
     filtre_input = input("Entrez le filtre pour les categories, par defaut(None) : ").strip() # appliquez le filtre
@@ -130,6 +132,18 @@ if raw_json:
         if filtre == None : # si aucun filtre n'est fourni
             term = term_id # on prend toutes les categories
             
+            # Cree un bloc de texte propre pour cette annotation specifique
+            block = (
+            f"Category: {category}\n"
+            f"Gene ID: {prot_name}\n"
+            f"Complex/Term ID: {term}\n"
+            f"Putative GO annotation: {loc_go}\n"
+            f"Protein Count: {protein_count}\n"
+            f"STRING IDs: {'\n '.join(string_ids)}\n"
+            f"Preferred Names: {'\n '.join(preferredNames)}\n"                
+            )
+            all_block.append(block) # Ajoute ce bloc a notre liste de resultats
+            
         # Filtre les categories selon l'input de l'utilisateur
         else:
             for id in range(len(term_id)): #parcours les diffentes categories 
@@ -138,6 +152,7 @@ if raw_json:
             if filtre == mot: #cherche si le nom de la categorie correspond au filtre
                 term = mot # permet d'inserer le filtre dans la categorie
                 print(term)
+                
                 
                 # Cree un bloc de texte propre pour cette annotation specifique
                 block = (
@@ -149,9 +164,9 @@ if raw_json:
                 f"STRING IDs: {'\n '.join(string_ids)}\n"
                 f"Preferred Names: {'\n '.join(preferredNames)}\n"                
                 )
-            
+                one_block.append(block)
         # Ajoute ce bloc a notre liste de résultats
-    results.append(block)
+    results = one_block if one_block else all_block # Utilise les resultats filtres si disponibles, sinon tous les resultats
 
 # Si l'API n'a retourne aucun résultat pour cette proteine
 if not results:
