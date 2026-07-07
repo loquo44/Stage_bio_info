@@ -4,7 +4,7 @@
 |Critère                |Complex Portal                    |Bio Cyc                           |STRING                            |
 |:----------------------|:---------------------------------|:---------------------------------|:---------------------------------|
 |entité de base         |complexe macromoléculaire         |objet biochimique(gènes,métabolite,complexe,reaction)|noeud protéique + paire d'intéraction|
-|Volume de complexe     |environ 4500 mais très précis     |4000-5000 principalement bactéries|aucun                             |
+|Volume de complexe non hypothétique    |environ 4500 mais très précis     |4000-5000 principalement bactéries|aucun                             |
 |converture du vivant   |20 organismes modèles             |>20 000 génomes                   |>12 500 organismes qui couvrent quasiment tout le vivant|
 |méthode de création    |Curation de la littérature à 100% |Hybride(1/3 curation et 2/3 IA)   |intégration algorithmique massive |
 |accès programmatique   |accessible seulement en .tsv car API obselète| API web nécessite un clé d'accès|API rest en accès libre |

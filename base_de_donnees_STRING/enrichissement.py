@@ -107,11 +107,23 @@ one_block = []
 all_block=[]
 # Traitement des donnees extraites du JSON
 if raw_json:
-    filtre_input = input("Entrez le filtre pour les categories, par defaut(None) : ").strip() # appliquez le filtre
+    filtre_input = input("Entrez le filtre pour les categories, par defaut(None) : ").strip() # appliquez le filtre pour un gene precis
     if filtre_input == "":
         filtre = None
     else:
         filtre = filtre_input
+    
+    filtre_hypotetic = input("Voulez-vous filtrer les annotations hypothétiques ? (oui/non, par défaut : non) : ").strip().lower() # appliquer le filtre pour afficher ou non les donnees
+    if filtre_hypotetic =="":
+        filtre_h = "non"
+    else:
+        filtre_h = filtre_hypotetic
+    
+    filtre_unknow = input("Voulez-vous filtrer les annotations inconnues ? (oui/non, par défaut : non) : ").strip().lower() # appliquer le filtre pour afficher ou non les donnees
+    if filtre_unknow =="":
+        filtre_u = "non"
+    else:
+        filtre_u = filtre_unknow   
     
     # Parcourt chaque annotation renvoyee par STRING
     for item in raw_json:
@@ -131,6 +143,7 @@ if raw_json:
         
         if filtre == None : # si aucun filtre n'est fourni
             term = term_id # on prend toutes les categories
+            
             # Cree un bloc de texte propre pour cette annotation specifique
             block = (
                 f"### Category: {category}\n"
@@ -138,21 +151,16 @@ if raw_json:
                 f"### Complex/Term ID: {term}\n"
                 f"### Putative GO annotation: {loc_go}\n"
                 f"### Protein Count: {protein_count}\n"
-                "\n"+"| Organisme_ID | STRING IDs      | Preferred Names \n"
+                "\n"+"| STRING IDs           | Preferred Names \n"
                 )
-            for i,recur_id in enumerate(string_ids):
-                
-                split = recur_id.split(".",1)
-                string_split = split[1]
-                organisme_id = split[0]
-                
-                block += (f"| {organisme_id}         | {string_split} | {preferredNames[i]} \n")
+            for i in range(len(string_ids)):
+                block += (f"| {string_ids[i]} | {preferredNames[i]} \n")
             all_block.append(block) # Ajoute ce bloc a notre liste de resultats
             
         # Filtre les categories selon l'input de l'utilisateur
         else:
             for id in range(len(term_id)): #parcours les diffentes categories 
-                mot+=term_id[id]
+                mot += term_id[id]
                 
             if filtre == mot: #cherche si le nom de la categorie correspond au filtre
                 term = mot # permet d'inserer le filtre dans la categorie
