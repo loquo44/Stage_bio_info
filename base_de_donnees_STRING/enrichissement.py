@@ -113,15 +113,15 @@ if raw_json:
     else:
         filtre = filtre_input
     
-    filtre_hypotetic = input("Voulez-vous filtrer les annotations hypothétiques ? (oui/non, par défaut : non) : ").strip().lower() # appliquer le filtre pour afficher ou non les donnees
+    filtre_hypotetic = input("Voulez-vous filtrer les annotations hypothétiques ? (yes/no, par défaut : non) : ").strip().lower() # appliquer le filtre pour afficher ou non les donnees
     if filtre_hypotetic =="":
-        filtre_h = "non"
+        filtre_h = "no"
     else:
         filtre_h = filtre_hypotetic
     
-    filtre_unknow = input("Voulez-vous filtrer les annotations inconnues ? (oui/non, par défaut : non) : ").strip().lower() # appliquer le filtre pour afficher ou non les donnees
+    filtre_unknow = input("Voulez-vous filtrer les annotations inconnues ? (yes/no, par défaut : non) : ").strip().lower() # appliquer le filtre pour afficher ou non les donnees
     if filtre_unknow =="":
-        filtre_u = "non"
+        filtre_u = "no"
     else:
         filtre_u = filtre_unknow   
     
@@ -141,7 +141,7 @@ if raw_json:
         
         loc_go = f"{desc}" # recupere la description de la proteine STRING
         
-        if filtre == None : # si aucun filtre n'est fourni
+        if filtre == None and filtre_h == "no" and filtre_u == "no": # si aucun filtre n'est fourni
             term = term_id # on prend toutes les categories
             
             # Cree un bloc de texte propre pour cette annotation specifique
@@ -153,8 +153,12 @@ if raw_json:
                 f"### Protein Count: {protein_count}\n"
                 "\n"+"| STRING IDs           | Preferred Names \n"
                 )
-            for i in range(len(string_ids)):
-                block += (f"| {string_ids[i]} | {preferredNames[i]} \n")
+            for i,recur_id in enumerate(string_ids):
+                
+                split = recur_id.split(".",1)
+                string_split = split[1]
+                organisme_id = split[0]
+                block += (f"| {organisme_id}         | {string_split} | {preferredNames[i]} \n")
             all_block.append(block) # Ajoute ce bloc a notre liste de resultats
             
         # Filtre les categories selon l'input de l'utilisateur
@@ -162,7 +166,7 @@ if raw_json:
             for id in range(len(term_id)): #parcours les diffentes categories 
                 mot += term_id[id]
                 
-            if filtre == mot: #cherche si le nom de la categorie correspond au filtre
+            if filtre == mot or filtre_h == "yes" or filtre_u == "yes": #cherche si le nom de la categorie correspond au filtre
                 term = mot # permet d'inserer le filtre dans la categorie
                 
                 
@@ -175,8 +179,12 @@ if raw_json:
                 f"### Protein Count: {protein_count}\n"
                 "\n"+"| STRING IDs           | Preferred Names \n"
                 )
-                for i in range(len(string_ids)):
-                    block += (f"| {string_ids[i]} | {preferredNames[i]} \n")
+                for i,recur_id in enumerate(string_ids):
+                
+                    split = recur_id.split(".",1)
+                    string_split = split[1]
+                    organisme_id = split[0]
+                    block += (f"| {organisme_id}         | {string_split} | {preferredNames[i]} \n")
                 one_block.append(block) 
         # Ajoute ce bloc a notre liste de résultats
     results = one_block if one_block else all_block # Utilise les resultats filtres si disponibles, sinon tous les resultats

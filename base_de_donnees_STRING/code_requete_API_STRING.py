@@ -86,7 +86,7 @@ raw_json = None
 print(f" Connexion à STRING-DB pour : {prot_name}")
 try:
     # Envoi de la requete GET à STRING
-    response = requests.get(url_string, params=api_params, timeout=10)
+    response = requests.get(url_string, params=api_params, timeout=60)
     if response.status_code == 200:
         # Recupere le contenu JSON si la requete a reussi
         raw_json = response.json()
@@ -145,7 +145,6 @@ if raw_json:
                 split = recur_id.split(".",1)
                 string_split = split[1]
                 organisme_id = split[0]
-                
                 block += (f"| {organisme_id}         | {string_split} | {preferredNames[i]} \n")
             all_block.append(block) # Ajoute ce bloc a notre liste de resultats
             
@@ -167,8 +166,12 @@ if raw_json:
                 f"### Protein Count: {protein_count}\n"
                 "\n"+"| STRING IDs           | Preferred Names \n"
                 )
-                for i in range(len(string_ids)):
-                    block += (f"| {string_ids[i]} | {preferredNames[i]} \n")
+                for i,recur_id in enumerate(string_ids):
+                
+                    split = recur_id.split(".",1)
+                    string_split = split[1]
+                    organisme_id = split[0]
+                    block += (f"| {organisme_id}         | {string_split} | {preferredNames[i]} \n")
                 one_block.append(block) 
         # Ajoute ce bloc a notre liste de résultats
     results = one_block if one_block else all_block # Utilise les resultats filtres si disponibles, sinon tous les resultats
