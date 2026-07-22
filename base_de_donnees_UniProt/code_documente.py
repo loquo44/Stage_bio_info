@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Jan 29 07:51:50 2026
+Created on Thu June 29 07:51:50 2026
 
 @author: meren
 """
@@ -14,16 +14,16 @@ from pathlib import Path
 # 1. Fichiers
 # creer 3 chemin distinct afin de récuperer des fichiers utiles au code
 # =====================================================
-input_file = Path(r"/workspaces/Stage_bio_info/base_de_donnees_UniProt/fichier_test_raccourci_Gene_ID.xlsx")
-output_file = Path(r"C:\Users\meren\Desktop\stage_info\uniprot_localisation_from_GeneID.xlsx")
-json_dir = Path(r"C:\Users\meren\Desktop\stage_info\uniprot_json_localisation")
+input_file = Path("~/Documents/remod_diffchip/Stage_bio_info/base_de_donnees_UniProt/fichier_test_raccourci_Gene_ID.xlsx")
+output_file = Path("~/Documents/remod_diffchip/Stage_bio_info/base_de_donnees_UniProt/uniprot_localisation_from_GeneID.xlsx")
+json_dir = Path("~/Documents/remod_diffchip/Stage_bio_info/base_de_donnees_UniProt/uniprot_json_localisation")
 
-json_dir.mkdir(exist_ok=True) # crée le dossier json_dir s'il n'existe pas déjà
+json_dir.mkdir(exist_ok=True, parents=True) # crée le dossier json_dir s'il n'existe pas déjà
 
 if json_dir.exists():
     print(f" Dossier JSON existe : {json_dir}")
     
-organisme = 10090 # à changer si l'on souhaite interroger un autre organisme (organisme les plus utilisés : mammal [homo-Sapiens = 9606, mus musculus = 10090], fish : [zebrafish = 7955], amphibian[xenopus laevis = 8355], yeast[saccharomyces = 4930], bacterium[escherichia coli = 562])
+organisme = 9606 # à changer si l'on souhaite interroger un autre organisme (organisme les plus utilisés : mammal [homo-Sapiens = 9606, mus musculus = 10090], fish : [zebrafish = 7955], amphibian[xenopus laevis = 8355], yeast[saccharomyces = 4930], bacterium[escherichia coli = 562])
 
 # Récupération du nom de l'organisme via UniProt 
 print (f"recherche du nom de l'organisme : {organisme}")
@@ -92,8 +92,7 @@ def query_uniprot_localisation(gene_ids, save_json=True):
                 break # si il y a une erreur réseau alors affiche l'erreur et sort de la boucle
 
             if r.status_code == 200:
-                data = r.json()
-                print(data) # creer un dictionnaire data qui prend en compte ce que renvoie l'appelle HTTP de r en format "json"
+                data = r.json() # creer un dictionnaire data qui prend en compte ce que renvoie l'appelle HTTP de r en format "json"
                 hits = data.get("results", []) # hits va contenir ce que va trouver get dans le dictionnaire data à "results" sinon renvoie une liste vide
                 if hits:
                     entry = hits[0] # entry prend la première valeur de hits en format dictionnaire
