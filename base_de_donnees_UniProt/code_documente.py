@@ -14,9 +14,9 @@ from pathlib import Path
 # 1. Fichiers
 # creer 3 chemin distinct afin de récuperer des fichiers utiles au code
 # =====================================================
-input_file = Path("~/Documents/remod_diffchip/Stage_bio_info/base_de_donnees_UniProt/fichier_test_raccourci_Gene_ID.xlsx")
-output_file = Path("~/Documents/remod_diffchip/Stage_bio_info/base_de_donnees_UniProt/uniprot_localisation_from_GeneID.xlsx")
-json_dir = Path("~/Documents/remod_diffchip/Stage_bio_info/base_de_donnees_UniProt/uniprot_json_localisation")
+input_file = Path("~/Documents/remod_diffchip/Stage_bio_info/base_de_donnees_UniProt/fichier_test_raccourci_Gene_ID.xlsx").expanduser()
+output_file = Path("~/Documents/remod_diffchip/Stage_bio_info/base_de_donnees_UniProt/uniprot_localisation_from_GeneID.xlsx").expanduser()
+json_dir = Path("~/Documents/remod_diffchip/Stage_bio_info/base_de_donnees_UniProt/uniprot_json_localisation").expanduser()
 
 json_dir.mkdir(exist_ok=True, parents=True) # crée le dossier json_dir s'il n'existe pas déjà
 
